@@ -33,6 +33,20 @@ app.get("/items", (request, response) => {
       order
   );
 });
+app.post("/items", (request, response) => {
+  const body = request.body
+  
+  pool
+    .insert(body)
+    .into(`orders`)
+    .then(data => {
+      console.log(data)
+      response.status(200).send(data).end()
+    })
+    .catch(err => console.log(err))
+});
+    
+  
 
 const PORT = 3001;
 app.listen(PORT, () => {
