@@ -1,6 +1,7 @@
 # Documentation Index
 
 - [Database Documentation][database_doc]
+- [Express Documentation][express_doc]
 
 ## Setting Up Environment
 
@@ -21,3 +22,4 @@ console.log(uuid);
 ```
 
 [database_doc]: documentation/database_doc.md
+[express_doc]: documentation/express_documentation.md
