@@ -24,14 +24,41 @@ app.get("/items", (request, response) => {
     let countrycode = request.query.countrycode;
     let order = request.query.orderID;
 
+  // checking if query parameters are missing
+  if (!uuid || !countrycode || !order) {
+    response.sendStatus(400);
+    return;
+  }
+
+  var validatedCountryCode = false;
+  var validatedOrderType = false;
+
+  //validating country codes with external npm module
+  const lookup = require("country-code-lookup");
+
+  for (var i = 0; i < lookup.countries.length; i++) {
+    if (countrycode == lookup.countries[i].internet) {
+      validatedCountryCode = true;
+    }
+  }
+
+  //validating order type (if between 1-10)
+  if (order >= 1 && order <= 10) {
+    validatedOrderType = true;
+  }
+
+  if (validatedCountryCode && validatedOrderType) {
     response.send(
-        "UUID is " +
-            uuid +
-            " countrycode is " +
-            countrycode +
-            " order type is " +
-            order
+      "UUID is " +
+        uuid +
+        " countrycode is " +
+        countrycode +
+        " order type is " +
+        order
     );
+  } else {
+    response.sendStatus(400);
+  }
 });
 
 const PORT = 3001;
