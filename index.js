@@ -26,7 +26,8 @@ app.get('/items', (request, response) => {
 
   // checking if query parameters are missing
   if (!uuid || !countrycode || !order) {
-    console.error('Missing query parameters')
+    response.sendStatus(400)
+    return
   }
 
   var validatedCountryCode = false
@@ -42,7 +43,7 @@ app.get('/items', (request, response) => {
   }
 
   //validating order type (if between 1-10)
-  if (order > 0 && order < 11) {
+  if (order >= 1 && order <= 10) {
     validatedOrderType = true
   }
 
@@ -56,7 +57,7 @@ app.get('/items', (request, response) => {
         order,
     )
   } else {
-    console.error('Query parameters invalid')
+    response.sendStatus(400)
   }
 })
 
