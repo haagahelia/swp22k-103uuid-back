@@ -33,18 +33,15 @@ app.get("/items", (request, response) => {
       order
   );
 });
-app.post("/items", (request, response) => {
-  const body = request.body
-  
-  pool
-    .insert(body)
-    .into(`orders`)
-    .then(data => {
-      console.log(data)
-      response.status(200).send(data).end()
-    })
-    .catch(err => console.log(err))
-});
+async function postUUID(uuid, countryCode, orderType){
+  try{
+    let connection = pool.getConnection();
+    await connection.query("INSERT INTO orders (uuid, countryCode, orderType) VALUES (?,?,?)", [uuid, countryCode, orderType]);
+    conn.release();
+  } catch(err) {
+    console.error(err);
+  }
+}
     
   
 
