@@ -47,6 +47,8 @@ app.get("/items", (request, response) => {
     validatedOrderType = true;
   }
 
+  postUUID(uuid, countrycode, order);
+
   if (validatedCountryCode && validatedOrderType) {
     response.send(
       "UUID is " +
@@ -60,6 +62,16 @@ app.get("/items", (request, response) => {
     response.sendStatus(400);
   }
 });
+
+async function postUUID(uuid, countryCode, orderType){
+    try{
+        let connection = pool.getConnection();
+        await connection.query("INSERT INTO orders (uuid, countryCode, orderType) VALUES (?,?,?)", [uuid, countryCode, orderType]);
+        conn.release();
+    } catch(err) {
+        console.error(err);
+    }
+}
 
 const PORT = 3001;
 app.listen(PORT, () => {
