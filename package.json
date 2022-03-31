@@ -12,6 +12,7 @@
   "dependencies": {
     "country-code-lookup": "^0.0.20",
     "express": "^4.17.3",
-    "mariadb": "^3.0.0"
+    "mariadb": "^3.0.0",
+    "winston": "^3.6.0"
   }
 }
