@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const mariadb = require("mariadb");
+const winston = require("winston");
 const pool = mariadb.createPool({
     host: "127.0.0.1",
     port: "3306",
@@ -8,6 +9,19 @@ const pool = mariadb.createPool({
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     connectionLimit: 5,
+});
+
+// Creating a logger using winston logger
+const logger = winston.createLogger({
+    level: "info",
+    format: winston.format.json(),
+    transports: [
+        new winston.transports.File({
+            filename: "uuidError.log",
+            level: "error",
+        }),
+        new winston.transports.File({ filename: "uuidCombined.log" }),
+    ],
 });
 
 app.get("/", (request, response) => {
@@ -24,56 +38,60 @@ app.get("/items", (request, response) => {
     let countrycode = request.query.countrycode;
     let order = request.query.orderID;
 
-  // checking if query parameters are missing
-  if (!uuid || !countrycode || !order) {
-    response.sendStatus(400);
-    return;
-  }
-
-  var validatedCountryCode = false;
-  var validatedOrderType = false;
-
-  //validating country codes with external npm module
-  const lookup = require("country-code-lookup");
-
-  for (var i = 0; i < lookup.countries.length; i++) {
-    if (countrycode == lookup.countries[i].internet) {
-      validatedCountryCode = true;
+    // checking if query parameters are missing
+    if (!uuid || !countrycode || !order) {
+        response.sendStatus(400);
+        return;
     }
-  }
 
-  //validating order type (if between 1-10)
-  if (order >= 1 && order <= 10) {
-    validatedOrderType = true;
-  }
+    var validatedCountryCode = false;
+    var validatedOrderType = false;
 
-  postUUID(uuid, countrycode, order);
+    //validating country codes with external npm module
+    const lookup = require("country-code-lookup");
 
-  if (validatedCountryCode && validatedOrderType) {
-    response.send(
-      "UUID is " +
-        uuid +
-        " countrycode is " +
-        countrycode +
-        " order type is " +
-        order
-    );
-  } else {
-    response.sendStatus(400);
-  }
+    for (var i = 0; i < lookup.countries.length; i++) {
+        if (countrycode == lookup.countries[i].internet) {
+            validatedCountryCode = true;
+        }
+    }
+
+    //validating order type (if between 1-10)
+    if (order >= 1 && order <= 10) {
+        validatedOrderType = true;
+    }
+
+    postUUID(uuid, countrycode, order);
+
+    if (validatedCountryCode && validatedOrderType) {
+        response.send(
+            "UUID is " +
+                uuid +
+                " countrycode is " +
+                countrycode +
+                " order type is " +
+                order
+        );
+    } else {
+        response.sendStatus(400);
+    }
 });
 
-async function postUUID(uuid, countryCode, orderType){
-    try{
+async function postUUID(uuid, countryCode, orderType) {
+    try {
         let connection = pool.getConnection();
-        await connection.query("INSERT INTO orders (uuid, countryCode, orderType) VALUES (?,?,?)", [uuid, countryCode, orderType]);
+        await connection.query(
+            "INSERT INTO orders (uuid, countryCode, orderType) VALUES (?,?,?)",
+            [uuid, countryCode, orderType]
+        );
         conn.release();
-    } catch(err) {
+    } catch (err) {
         console.error(err);
     }
 }
 
+// saving data using the logger
 const PORT = 3001;
 app.listen(PORT, () => {
-    console.log(`Server running on ${PORT}`);
+    logger.info(`Server running on ${PORT}`);
 });
