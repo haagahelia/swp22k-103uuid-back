@@ -23,12 +23,12 @@
     6. Enter (`Y`) for remove test databases.
     7. Enter (`Y`) for reload privilege table.
 4. Open mariadb (`mariadb`).
-5. Create a user for the program (SQL: `CREATE USER 'program_user'@'%' IDENTIFIED BY 'secure_password';`).
+5. Create a user for the program (SQL: `CREATE USER 'program_user'@'localhost' IDENTIFIED BY 'secure_password';`).
 6. **OPTIONAL** Check if user exists (SQL: `SELECT User FROM mysql.user;`).![][img1]
-7. Now you can grant the user all privileges (SQL: `GRANT ALL PRIVILEGES ON *.* TO 'program_user'@'%' IDENTIFIED BY 'secure_password';`). If mariadb on the machine will contain other databases you can scope privileges to the project database.
-8. Flush privilege table (SQL: `FLUSH PRIVILEGES;`).
-9. **OPTIONAL** Check for privileges (SQL: `SHOW GRANTS FOR 'program_user'@'%';`).![][img2]
-10. Create database (SQL: `CREATE DATABASE database_name;`).
+7. Create database (SQL: `CREATE DATABASE database_name;`).
+8. Now you can grant the user all privileges (SQL: `GRANT ALL PRIVILEGES ON *.'database_name' TO 'program_user'@'localhost' IDENTIFIED BY 'secure_password';`). If mariadb on the machine will contain other databases you can scope privileges to the project database.
+9. Flush privilege table (SQL: `FLUSH PRIVILEGES;`).
+10. **OPTIONAL** Check for privileges (SQL: `SHOW GRANTS FOR 'program_user'@'localhost';`).![][img2]
 11. Select the database (SQL: `USE database_name;`).
 12. Push table structure (SQL: `source database.sql`) this command assumes that you ran the initial `mariadb` command from the same directory where the database.sql file is present.
 13. Exit the database (SQL: `exit;`).
