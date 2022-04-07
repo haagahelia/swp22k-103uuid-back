@@ -90,6 +90,17 @@ async function postUUID(uuid, countryCode, orderType) {
     }
 }
 
+// endpoint to list all from database
+app.get("/all", async (request, response) => {
+    try {
+        let connection = pool.getConnection();
+        await connection.query("SELECT * FROM orders");
+        console.log((response) => response.json());
+    } catch (err) {
+        console.error(err);
+    }
+});
+
 // saving data using the logger
 const PORT = 3001;
 app.listen(PORT, () => {
