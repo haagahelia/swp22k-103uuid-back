@@ -89,16 +89,17 @@ async function postUUID(uuid, countryCode, orderType) {
         console.error(err);
     }
 }
-function sqlQuery(values){
+function insertIntoDatabase (uuid, country_code, order_type, address){
   let con = pool.createConnection();
   con.connect(function(err){
     if (err) throw err;
-    console.log("Connected!");
-    let sql = "INSERT INTO orders (uuid, country_code, order_type, address, signature_data, signature_time) VALUES ?";
+    let sql = "INSERT INTO orders (uuid, country_code, order_type, address) VALUES ?";
+    let values = [
+        [uuid, country_code, order_type, address]
+        ];
    
     con.query(sql, [values], function (err,result){
       if (err) throw err;
-      console.log("Number of records inserted: " + result.affectedRows);
 
     });
 
