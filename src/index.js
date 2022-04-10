@@ -89,6 +89,22 @@ async function postUUID(uuid, countryCode, orderType) {
         console.error(err);
     }
 }
+function insertIntoDatabase (uuid, country_code, order_type, address){
+  let con = pool.createConnection();
+  con.connect(function(err){
+    if (err) throw err;
+    let sql = "INSERT INTO orders (uuid, country_code, order_type, address) VALUES ?";
+    let values = [
+        [uuid, country_code, order_type, address]
+        ];
+   
+    con.query(sql, [values], function (err,result){
+      if (err) throw err;
+
+    });
+
+  });
+}
 
 // Endpoint to list all from database
 app.get("/list", async (req, res) => {
