@@ -89,6 +89,21 @@ async function postUUID(uuid, countryCode, orderType) {
         console.error(err);
     }
 }
+function sqlQuery(values){
+  let con = pool.createConnection();
+  con.connect(function(err){
+    if (err) throw err;
+    console.log("Connected!");
+    let sql = "INSERT INTO orders (uuid, country_code, order_type, address, signature_data, signature_time) VALUES ?";
+   
+    con.query(sql, [values], function (err,result){
+      if (err) throw err;
+      console.log("Number of records inserted: " + result.affectedRows);
+
+    });
+
+  });
+}
 
 // Endpoint to list all from database
 app.get("/list", async (req, res) => {
