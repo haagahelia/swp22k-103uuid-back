@@ -93,6 +93,23 @@ async function postUUID(uuid, countryCode, orderType) {
     }
 }
 
+function insertIntoDatabase (uuid, country_code, order_type, address){
+    let con = pool.createConnection();
+    con.connect(function(err){
+      if (err) throw err;
+      let sql = "INSERT INTO orders (uuid, country_code, order_type, address) VALUES ?";
+      let values = [
+          [uuid, country_code, order_type, address]
+          ];
+     
+      con.query(sql, [values], function (err,result){
+        if (err) throw err;
+  
+      });
+  
+    });
+  }
+
 // returns a randomUUID
 function createRandomUUID() {
     let uuid = crypto.randomUUID();
@@ -140,6 +157,8 @@ function randomOrder() {
     
     return [randomUUID, randomOrderType, randomCountryCode]
 }
+
+
 
 // endpoint to list all from database
 app.get("/all", async (request, response) => {
