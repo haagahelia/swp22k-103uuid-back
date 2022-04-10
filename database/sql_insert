@@ -1,0 +1,4 @@
+INSERT INTO orders (uuid, country_code, order_type, address, signature_data, signature_time) VALUES
+('7ed61ddd263943edaf99efd5b', 'FIN', '11111111111', 'Tilanhoitajankaari 3 00790 Helsinki', NULL,'2022-04-09' ),
+('5a8b6292c1714086998d8387c', 'FIN', '22222222222', 'Kultakummuntie 4 00940 Helsinki', NULL ,'2022-04-10'),
+('b1991342c57746a3b4037a6e6', 'ENG', '33333333333', '782 High Rd London N17 0BX', NULL,'2022-04-10');
