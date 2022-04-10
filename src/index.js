@@ -90,14 +90,14 @@ async function postUUID(uuid, countryCode, orderType) {
     }
 }
 
-// endpoint to list all from database
-app.get("/all", async (request, response) => {
-    try {
-        let connection = pool.getConnection();
-        await connection.query("SELECT * FROM orders");
-        console.log((response) => response.json());
-    } catch (err) {
-        console.error(err);
+// Endpoint to list all from database
+app.get("/list", async (req, res) => {
+    let validated = req.query.validated ? req.query.validated : false;
+
+    if(validated) {
+        // TODO (axel): Respond with already validated orders. (validated = signed)
+    } else {
+        // TODO (axel): Respond with non-validated oreders.
     }
 });
 
