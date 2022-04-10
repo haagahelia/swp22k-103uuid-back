@@ -1,3 +1,6 @@
+import countriesModule from require("./countries");
+let countryCodes = countriesModule.array;
+
 const express = require("express");
 const app = express();
 const mariadb = require("mariadb");
@@ -90,6 +93,54 @@ async function postUUID(uuid, countryCode, orderType) {
     }
 }
 
+// returns a randomUUID
+function createRandomUUID() {
+    let uuid = crypto.randomUUID();
+    //console.log(uuid);
+    let cleanUuid = "";
+
+    for (let i = 0; i < uuid.length; i++) {
+        if (uuid[i] !== "-") {
+            cleanUuid += uuid[i];
+        }
+    }
+
+    //console.log(cleanUuid);
+    let finalUuid = cleanUuid;
+
+    for (let x = 0; x < 8; x++) {
+        let randNumb = Math.floor(Math.random() * finalUuid.length);
+        finalUuid =
+            finalUuid.substring(0, randNumb) +
+            finalUuid.substring(randNumb + 1);
+    }
+
+    //console.log(finalUuid);
+    //console.log(finalUuid.length);
+    return finalUuid;
+}
+
+// returns a random orderType
+function createRandomOrderType() {
+    // Since we decided to keep the OrderType as an integer I decided to return a random number between 1 and 10
+    return Math.floor(Math.random() * 10) + 1;
+}
+
+// returns a random countryCode
+function createRandomCountryCode() {
+    let randomCountryNumber = Math.floor(Math.random() * countryCodes.length);
+    return countryCodes[randomCountryNumber].alpha3Code;
+}
+
+// returns a list of random values as [uuid, orderType, countryCode]
+function randomOrder() {
+    let randomUUID = createRandomUUID();
+    let randomOrderType = createRandomOrderType();
+    let randomCountryCode = createRandomCountryCode();
+    
+    return [randomUUID, randomOrderType, randomCountryCode]
+}
+
 // endpoint to list all from database
 app.get("/all", async (request, response) => {
     try {
@@ -100,6 +151,8 @@ app.get("/all", async (request, response) => {
         console.error(err);
     }
 });
+
+function randomCountryCode() {}
 
 // saving data using the logger
 const PORT = 3001;
