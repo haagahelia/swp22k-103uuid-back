@@ -1,4 +1,4 @@
-exports.array = [
+export default [
     {
         alpha3Code: "AFG",
         independent: false,
